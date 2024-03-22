@@ -1,4 +1,4 @@
-package com.example.application_weather_report.android
+package com.example.application_weather_report.android.view
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.shape.RoundedCornerShape

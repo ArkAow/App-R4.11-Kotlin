@@ -2,7 +2,7 @@ package com.example.application_weather_report.android.model
 
 import com.google.gson.annotations.SerializedName
 
-data class Response(
+data class WeatherResponse(
 
 	@field:SerializedName("dateGenerated")
 	val dateGenerated: String? = null,
