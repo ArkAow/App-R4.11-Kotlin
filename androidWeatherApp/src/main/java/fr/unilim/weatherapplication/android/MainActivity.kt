@@ -74,6 +74,9 @@ fun WeatherApp() {
                     contentAlignment = Alignment.Center
                 ) {
                     Column(modifier = Modifier.padding(16.dp)) {
+                        // Ajout de l'icône et du nom de l'application
+                        AppHeader()
+
                         // Section des favoris
                         FavoriteCitiesSection(
                             cities = listOf("Paris", "Limoges", "Poitiers", "Fleuré", "Nieuil"),
@@ -89,6 +92,26 @@ fun WeatherApp() {
                 }
             }
         }
+    }
+}
+
+@Composable
+fun AppHeader() {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+        modifier = Modifier.padding(16.dp)
+    ) {
+        Image(
+            painter = painterResource(id = R.drawable.weather_report_icon),
+            contentDescription = "Weather Icon",
+            modifier = Modifier.size(48.dp)
+        )
+        Text(
+            text = "Weather Application",
+            color = Color.White,
+            modifier = Modifier.padding(top = 8.dp)
+        )
     }
 }
 
