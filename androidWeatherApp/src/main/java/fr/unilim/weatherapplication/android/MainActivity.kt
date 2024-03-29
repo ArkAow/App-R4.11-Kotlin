@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -43,23 +44,41 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun WeatherApp() {
     Box(modifier = Modifier.fillMaxSize()) {
+        // Couche pour l'image de fond
         Image(
             painter = painterResource(id = R.drawable.sunny_day_wallpaper),
             contentDescription = null,
             modifier = Modifier.fillMaxSize()
         )
-        Column(modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+
+        // Couche pour le contenu (texte et autres éléments)
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            Column(modifier = Modifier.padding(16.dp)) {
+                // Section des villes favorites
+                FavoriteCitiesSection(
+                    cities = listOf("Paris", "Limoges", "Poitiers"),
+                    onCityClicked = { }
+                )
+
+                // Divider
+                Divider(modifier = Modifier.height(1.dp), color = Color.White.copy(alpha = 0.12f))
+
+                // Section de recherche
+                SearchCitySection()
+            }
+        }
+
+        // Rectangle noir transparent superposé à l'image
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
         ) {
-            FavoriteCitiesSection(
-                cities = listOf("Paris", "Limoges", "Poitiers"),
-                onCityClicked = { }
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.Black.copy(alpha = 0.4f))
+                    .padding(16.dp)
             )
-            Divider(modifier = Modifier.height(1.dp), color = Color.White.copy(alpha = 0.12f))
-            SearchCitySection()
         }
     }
 }
