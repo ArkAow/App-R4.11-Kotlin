@@ -14,6 +14,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Application-Weather-Report"
-include(":androidApp")
-include(":shared")
+rootProject.name = "WeatherApplication"
+include(":androidWeatherApp")
+include(":sharedWeatherApp")
