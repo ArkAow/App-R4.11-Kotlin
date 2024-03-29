@@ -80,6 +80,8 @@ fun WeatherApp() {
                             onCityClicked = { }
                         )
 
+                        Spacer(modifier = Modifier.height(64.dp))
+
                         // Section de recherche
                         SearchCitySection()
                     }
