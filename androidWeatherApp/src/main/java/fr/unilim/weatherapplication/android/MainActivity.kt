@@ -22,7 +22,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 
 class MainActivity : ComponentActivity() {
@@ -48,37 +50,41 @@ fun WeatherApp() {
         Image(
             painter = painterResource(id = R.drawable.sunny_day_wallpaper),
             contentDescription = null,
-            modifier = Modifier.fillMaxSize()
+            contentScale = ContentScale.FillBounds,
+            modifier = Modifier
+                .fillMaxSize()
+                .blur(8.dp)
         )
-
-        // Couche pour le contenu (texte et autres éléments)
-        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            Column(modifier = Modifier.padding(16.dp)) {
-                // Section des villes favorites
-                FavoriteCitiesSection(
-                    cities = listOf("Paris", "Limoges", "Poitiers"),
-                    onCityClicked = { }
-                )
-
-                // Divider
-                Divider(modifier = Modifier.height(1.dp), color = Color.White.copy(alpha = 0.12f))
-
-                // Section de recherche
-                SearchCitySection()
-            }
-        }
-
-        // Rectangle noir transparent superposé à l'image
         Box(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(24.dp,64.dp),
             contentAlignment = Alignment.Center
         ) {
+            // Couche pour le fond noir
             Box(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(Color.Black.copy(alpha = 0.4f))
                     .padding(16.dp)
-            )
+            ) {
+
+                // Couche pour le contenu (texte et autres éléments)
+                Box(modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Column(modifier = Modifier.padding(16.dp)) {
+                        // Section des favoris
+                        FavoriteCitiesSection(
+                            cities = listOf("Paris", "Limoges", "Poitiers"),
+                            onCityClicked = { }
+                        )
+
+                        // Section de recherche
+                        SearchCitySection()
+                    }
+                }
+            }
         }
     }
 }
@@ -115,6 +121,7 @@ fun SearchCitySection() {
             modifier = Modifier
                 .padding(vertical = 16.dp)
                 .padding(horizontal = 8.dp)
+
         )
         OutlinedTextField(
             value = TextFieldValue(text = searchText),
