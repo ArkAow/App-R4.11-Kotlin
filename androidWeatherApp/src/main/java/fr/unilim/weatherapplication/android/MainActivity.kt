@@ -9,6 +9,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -58,7 +60,7 @@ fun WeatherApp() {
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(24.dp,64.dp),
+                .padding(24.dp,24.dp),
             contentAlignment = Alignment.Center
         ) {
             // Couche pour le fond noir
@@ -71,11 +73,14 @@ fun WeatherApp() {
 
                 // Couche pour le contenu (texte et autres éléments)
                 Box(modifier = Modifier.fillMaxSize(),
-                    contentAlignment = Alignment.Center
+                    contentAlignment = Alignment.TopStart
                 ) {
                     Column(modifier = Modifier.padding(16.dp)) {
                         // Ajout de l'icône et du nom de l'application
                         AppHeader()
+
+                        // Espace entre les sections
+                        Spacer(modifier = Modifier.height(48.dp))
 
                         // Section des favoris
                         FavoriteCitiesSection(
@@ -83,8 +88,26 @@ fun WeatherApp() {
                             onCityClicked = { }
                         )
 
+                        // Bouton "Modifier les favoris"
+                        Button(
+                            onClick = { /* Logique à ajouter */ },
+                            colors = ButtonDefaults.buttonColors(
+                                Color(0xFF7eb4b2)
+                            ),
+                            modifier = Modifier
+                                .padding(
+                                    top = 16.dp,
+                                    end = 32.dp,
+                                    start = 32.dp
+                                )
+                                .fillMaxWidth()
+                        ) {
+                            Text("Modifier les favoris")
+                        }
+
                         // Espace entre les sections
-                        Spacer(modifier = Modifier.height(64.dp))
+                        Spacer(modifier = Modifier.height(48.dp))
+
 
                         // Section de recherche
                         SearchCitySection()
@@ -97,21 +120,37 @@ fun WeatherApp() {
 
 @Composable
 fun AppHeader() {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
-        modifier = Modifier.padding(16.dp)
+    Row(
+        verticalAlignment = Alignment.CenterVertically
+
     ) {
-        Image(
-            painter = painterResource(id = R.drawable.weather_report_icon),
-            contentDescription = "Weather Icon",
-            modifier = Modifier.size(48.dp)
-        )
-        Text(
-            text = "Weather Application",
-            color = Color.White,
-            modifier = Modifier.padding(top = 8.dp)
-        )
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(80.dp)
+                .background(
+                    color = Color.Black.copy(alpha = 0.4f),
+                    shape = RoundedCornerShape(16.dp)
+                            ),
+            contentAlignment = Alignment.Center
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.weather_report_icon),
+                    contentDescription = "Weather Icon",
+                    contentScale = ContentScale.FillHeight,
+                    modifier = Modifier.size(64.dp)
+                )
+                // Nom de l'application à côté de l'icône
+                Text(
+                    text = "Weather Application",
+                    color = Color.White,
+                    modifier = Modifier.padding(start = 24.dp)
+                )
+            }
+        }
     }
 }
 
@@ -172,7 +211,10 @@ fun FavoriteCityItem(cityName: String, onCityClicked: (String) -> Unit) {
             .size(120.dp, 200.dp)
             .padding(4.dp)
             .clickable { onCityClicked(cityName) }
-            .background(Color.Black.copy(alpha = 0.4f)),
+            .background(
+                color = Color.Black.copy(alpha = 0.4f),
+                shape = RoundedCornerShape(16.dp)
+            ),
         contentAlignment = Alignment.Center
     ) {
         Text(
