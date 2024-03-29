@@ -80,6 +80,7 @@ fun WeatherApp() {
                             onCityClicked = { }
                         )
 
+                        // Espace entre les sections
                         Spacer(modifier = Modifier.height(64.dp))
 
                         // Section de recherche
