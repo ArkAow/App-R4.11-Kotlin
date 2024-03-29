@@ -76,7 +76,7 @@ fun WeatherApp() {
                     Column(modifier = Modifier.padding(16.dp)) {
                         // Section des favoris
                         FavoriteCitiesSection(
-                            cities = listOf("Paris", "Limoges", "Poitiers"),
+                            cities = listOf("Paris", "Limoges", "Poitiers", "Fleuré", "Nieuil"),
                             onCityClicked = { }
                         )
 
@@ -144,16 +144,19 @@ fun SearchCitySection() {
 
 @Composable
 fun FavoriteCityItem(cityName: String, onCityClicked: (String) -> Unit) {
-    Row(
+    Box(
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp)
-            .clickable { onCityClicked(cityName) },
-        verticalAlignment = Alignment.CenterVertically
+            .size(120.dp, 200.dp)
+            .padding(4.dp)
+            .clickable { onCityClicked(cityName) }
+            .background(Color.Black.copy(alpha = 0.4f)),
+        contentAlignment = Alignment.Center
     ) {
         Text(
             text = cityName,
-            color = Color.White
+            color = Color.White,
+            modifier = Modifier
+                .padding(bottom = 64.dp)
         )
     }
 }
