@@ -3,6 +3,7 @@ package fr.unilim.weatherapplication.android
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -20,6 +21,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,16 +42,23 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun WeatherApp() {
-    Column(modifier = Modifier
-        .fillMaxSize()
-        .padding(16.dp)
-    ) {
-        FavoriteCitiesSection(
-            cities = listOf("Paris", "Limoges", "Poitiers"),
-            onCityClicked = { }
+    Box(modifier = Modifier.fillMaxSize()) {
+        Image(
+            painter = painterResource(id = R.drawable.sunny_day_wallpaper),
+            contentDescription = null,
+            modifier = Modifier.fillMaxSize()
         )
-        Divider(modifier = Modifier.height(1.dp), color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f))
-        Box(modifier = Modifier.weight(1f), contentAlignment = Alignment.Center) {
+        Column(modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            FavoriteCitiesSection(
+                cities = listOf("Paris", "Limoges", "Poitiers"),
+                onCityClicked = { }
+            )
+            Divider(modifier = Modifier.height(1.dp), color = Color.White.copy(alpha = 0.12f))
             SearchCitySection()
         }
     }
