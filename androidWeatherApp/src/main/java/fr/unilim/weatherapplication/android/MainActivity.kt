@@ -94,6 +94,7 @@ fun FavoriteCitiesSection(cities: List<String>, onCityClicked: (String) -> Unit)
     Column(modifier = Modifier.fillMaxWidth()) {
         Text(
             text = "Favoris",
+            color = Color.White,
             modifier = Modifier.padding(16.dp)
         )
         LazyRow {
@@ -118,6 +119,7 @@ fun SearchCitySection() {
     ) {
         Text(
             text = "Rechercher",
+            color = Color.White,
             modifier = Modifier
                 .padding(vertical = 16.dp)
                 .padding(horizontal = 8.dp)
@@ -126,7 +128,11 @@ fun SearchCitySection() {
         OutlinedTextField(
             value = TextFieldValue(text = searchText),
             onValueChange = { searchText = it.text },
-            label = { Text("Saisissez le nom d'une ville") },
+            label = {
+                Text(
+                    text = "Saisissez le nom d'une ville",
+                    color = Color.White
+                )},
             modifier = Modifier.fillMaxWidth()
         )
     }
@@ -142,7 +148,10 @@ fun FavoriteCityItem(cityName: String, onCityClicked: (String) -> Unit) {
             .clickable { onCityClicked(cityName) },
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(text = cityName)
+        Text(
+            text = cityName,
+            color = Color.White
+        )
     }
 }
 
