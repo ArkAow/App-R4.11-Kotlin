@@ -30,13 +30,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.blur
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import model.City
 import java.util.Calendar
 
 class MainActivity : ComponentActivity() {
@@ -57,6 +57,15 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun WeatherApp() {
+    // liste de villes
+    val villes = listOf(
+        City("Paris", "75", "Ensoleillé", 25, 25, 21),
+        City("Limoges", "87", "Pluie", 15, 25, 21),
+        City("Poitiers", "86", "Nuageux", 20, 25, 21),
+        City("Fleuré", "86", "Ensoleillé", 28, 28, 21),
+        City("Nieuil", "16", "Orage", 22, 25, 21)
+    )
+
     val currentHour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
     val backgroundImages = listOf(
         R.drawable.morning_image,
@@ -100,10 +109,7 @@ fun WeatherApp() {
                         Spacer(modifier = Modifier.height(48.dp))
 
                         // Section des favoris
-                        FavoriteCitiesSection(
-                            cities = listOf("Paris", "Limoges", "Poitiers", "Fleuré", "Nieuil"),
-                            onCityClicked = { }
-                        )
+                        FavoriteCitiesSection(villes)
 
                         // Bouton "Modifier les favoris"
                         Button(
@@ -171,7 +177,7 @@ fun AppHeader() {
 }
 
 @Composable
-fun FavoriteCitiesSection(cities: List<String>, onCityClicked: (String) -> Unit) {
+fun FavoriteCitiesSection(cities: List<City>) {
     Column(modifier = Modifier.fillMaxWidth()) {
         Text(
             text = "Favoris",
@@ -181,8 +187,7 @@ fun FavoriteCitiesSection(cities: List<String>, onCityClicked: (String) -> Unit)
         LazyRow {
             items(cities.size) { index ->
                 FavoriteCityItem(
-                    cityName = cities[index],
-                    onCityClicked = onCityClicked
+                    city = cities[index]
                 )
             }
         }
@@ -221,12 +226,12 @@ fun SearchCitySection() {
 
 
 @Composable
-fun FavoriteCityItem(cityName: String, onCityClicked: (String) -> Unit) {
+fun FavoriteCityItem(city: City) {
     Box(
         modifier = Modifier
             .size(120.dp, 200.dp)
             .padding(4.dp)
-            .clickable { onCityClicked(cityName) }
+            .clickable { }
             .background(
                 color = Color.Black.copy(alpha = 0.4f),
                 shape = RoundedCornerShape(16.dp)
@@ -234,7 +239,7 @@ fun FavoriteCityItem(cityName: String, onCityClicked: (String) -> Unit) {
         contentAlignment = Alignment.Center
     ) {
         Text(
-            text = cityName,
+            text = city.name,
             color = Color.White,
             modifier = Modifier
                 .padding(bottom = 64.dp)
