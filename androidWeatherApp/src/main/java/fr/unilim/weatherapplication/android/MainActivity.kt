@@ -1,16 +1,15 @@
 package fr.unilim.weatherapplication.android
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -31,6 +30,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
@@ -38,9 +38,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import coil.compose.rememberImagePainter
+import androidx.core.app.ActivityCompat.startActivityForResult
 import model.City
 import java.util.Calendar
+
+const val MANAGE_FAVORITES_REQUEST_CODE = 1
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,7 +63,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun WeatherApp() {
     // liste de villes
-    val villes = listOf(
+    val favoritesCities = listOf(
         City("Paris", "75", "Sunny", 25, 25, 21),
         City("Limoges", "87", "rainy", 15, 25, 21),
         City("Poitiers", "86", "sloudy", 20, 25, 21),
@@ -71,10 +73,10 @@ fun WeatherApp() {
 
     val currentHour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
     val backgroundImages = listOf(
+        R.drawable.night_image,
         R.drawable.morning_image,
         R.drawable.afternoom_image,
-        R.drawable.evening_image,
-        R.drawable.night_image
+        R.drawable.evening_image
     )
     val backgroundImage = backgroundImages[currentHour / 6]
 
@@ -89,14 +91,14 @@ fun WeatherApp() {
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(24.dp,24.dp),
+                .padding(16.dp),
             contentAlignment = Alignment.Center
         ) {
             // Couche pour le fond noir
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(Color.Black.copy(alpha = 0.4f))
+                    .background(Color.Black.copy(alpha = 0.6f))
                     .padding(16.dp)
             ) {
 
@@ -112,11 +114,14 @@ fun WeatherApp() {
                         Spacer(modifier = Modifier.height(48.dp))
 
                         // Section des favoris
-                        FavoriteCitiesSection(villes)
+                        FavoriteCitiesSection(favoritesCities)
 
                         // Bouton "Modifier les favoris"
                         Button(
-                            onClick = { /* Logique à ajouter */ },
+                            onClick = {
+                                val intent = Intent(this, FavoritesManagerActivity::class.java)
+                                startActivityForResult(intent, MANAGE_FAVORITES_REQUEST_CODE)
+                            },
                             colors = ButtonDefaults.buttonColors(
                                 Color(0xFF7eb4b2)
                             ),
@@ -154,7 +159,7 @@ fun AppHeader() {
                 .fillMaxWidth()
                 .height(80.dp)
                 .background(
-                    color = Color.Black.copy(alpha = 0.4f),
+                    color = Color.Black.copy(alpha = 0.6f),
                     shape = RoundedCornerShape(16.dp)
                 ),
             contentAlignment = Alignment.Center
@@ -235,22 +240,28 @@ fun FavoriteCityItem(city: City) {
     Box(
         modifier = Modifier
             .size(120.dp, 200.dp)
-            .background(Color.Black.copy(alpha = 0.4f), shape = RoundedCornerShape(16.dp))
+            .padding(end = 10.dp)
     ) {
+        Image(
+            painter = weatherImage,
+            contentDescription = null,
+            modifier = Modifier
+                .fillMaxSize()
+                .clip(RoundedCornerShape(16.dp)),
+            contentScale = ContentScale.FillHeight
+        )
         Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.BottomCenter
+            modifier = Modifier
+                .size(120.dp, 200.dp)
+                .background(Color.Black.copy(
+                    alpha = 0.4f),
+                    shape = RoundedCornerShape(16.dp)),
+            contentAlignment = Alignment.TopCenter
         ) {
-            Image(
-                painter = weatherImage,
-                contentDescription = null,
-                modifier = Modifier.fillMaxSize(),
-                contentScale = ContentScale.FillHeight
-            )
             Text(
                 text = city.name,
                 color = Color.White,
-                modifier = Modifier.padding(bottom = 16.dp)
+                modifier = Modifier.padding(top = 16.dp)
             )
         }
     }
