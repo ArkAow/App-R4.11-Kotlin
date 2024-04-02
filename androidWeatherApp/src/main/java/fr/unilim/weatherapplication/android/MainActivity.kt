@@ -36,6 +36,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil.compose.rememberImagePainter
 import model.City
 import java.util.Calendar
 
@@ -59,11 +60,11 @@ class MainActivity : ComponentActivity() {
 fun WeatherApp() {
     // liste de villes
     val villes = listOf(
-        City("Paris", "75", "Ensoleillé", 25, 25, 21),
-        City("Limoges", "87", "Pluie", 15, 25, 21),
-        City("Poitiers", "86", "Nuageux", 20, 25, 21),
-        City("Fleuré", "86", "Ensoleillé", 28, 28, 21),
-        City("Nieuil", "16", "Orage", 22, 25, 21)
+        City("Paris", "75", "Sunny", 25, 25, 21),
+        City("Limoges", "87", "Rainny", 15, 25, 21),
+        City("Poitiers", "86", "Cloudy", 20, 25, 21),
+        City("Fleuré", "86", "Sunny", 28, 28, 21),
+        City("Nieuil", "16", "Stormy", 22, 25, 21)
     )
 
     val currentHour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
@@ -227,6 +228,7 @@ fun SearchCitySection() {
 
 @Composable
 fun FavoriteCityItem(city: City) {
+
     Box(
         modifier = Modifier
             .size(120.dp, 200.dp)
