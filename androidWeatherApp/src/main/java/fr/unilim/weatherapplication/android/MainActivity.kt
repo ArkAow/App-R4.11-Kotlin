@@ -258,7 +258,7 @@ fun FavoriteCityItem(city: City) {
 
 @Composable
 fun getWeatherImageResourceId(weather: String): Int {
-    return when (weather.toLowerCase()) {
+    return when (weather.lowercase()) {
         "sunny" -> R.drawable.sunny_weather
         "rainy" -> R.drawable.rainy_weather
         "cloudy" -> R.drawable.cloudy_weather
