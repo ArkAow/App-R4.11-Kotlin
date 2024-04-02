@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -31,6 +32,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.TextFieldValue
@@ -61,10 +63,10 @@ fun WeatherApp() {
     // liste de villes
     val villes = listOf(
         City("Paris", "75", "Sunny", 25, 25, 21),
-        City("Limoges", "87", "Rainny", 15, 25, 21),
-        City("Poitiers", "86", "Cloudy", 20, 25, 21),
-        City("Fleuré", "86", "Sunny", 28, 28, 21),
-        City("Nieuil", "16", "Stormy", 22, 25, 21)
+        City("Limoges", "87", "rainy", 15, 25, 21),
+        City("Poitiers", "86", "sloudy", 20, 25, 21),
+        City("Fleuré", "86", "sunny", 28, 28, 21),
+        City("Nieuil", "16", "stormy", 22, 25, 21)
     )
 
     val currentHour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
@@ -228,24 +230,40 @@ fun SearchCitySection() {
 
 @Composable
 fun FavoriteCityItem(city: City) {
+    val weatherImage: Painter = painterResource(id = getWeatherImageResourceId(city.meteo))
 
     Box(
         modifier = Modifier
             .size(120.dp, 200.dp)
-            .padding(4.dp)
-            .clickable { }
-            .background(
-                color = Color.Black.copy(alpha = 0.4f),
-                shape = RoundedCornerShape(16.dp)
-            ),
-        contentAlignment = Alignment.Center
+            .background(Color.Black.copy(alpha = 0.4f), shape = RoundedCornerShape(16.dp))
     ) {
-        Text(
-            text = city.name,
-            color = Color.White,
-            modifier = Modifier
-                .padding(bottom = 64.dp)
-        )
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.BottomCenter
+        ) {
+            Image(
+                painter = weatherImage,
+                contentDescription = null,
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.FillHeight
+            )
+            Text(
+                text = city.name,
+                color = Color.White,
+                modifier = Modifier.padding(bottom = 16.dp)
+            )
+        }
+    }
+}
+
+@Composable
+fun getWeatherImageResourceId(weather: String): Int {
+    return when (weather.toLowerCase()) {
+        "sunny" -> R.drawable.sunny_weather
+        "rainy" -> R.drawable.rainy_weather
+        "cloudy" -> R.drawable.cloudy_weather
+        "stormy" -> R.drawable.stormy_weather
+        else -> R.drawable.cloudy_weather
     }
 }
 
