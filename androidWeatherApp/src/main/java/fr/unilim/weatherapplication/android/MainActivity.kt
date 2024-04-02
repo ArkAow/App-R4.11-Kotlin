@@ -37,6 +37,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import java.util.Calendar
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -56,15 +57,22 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun WeatherApp() {
+    val currentHour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
+    val backgroundImages = listOf(
+        R.drawable.morning_image,
+        R.drawable.afternoom_image,
+        R.drawable.evening_image,
+        R.drawable.night_image
+    )
+    val backgroundImage = backgroundImages[currentHour / 6]
+
     Box(modifier = Modifier.fillMaxSize()) {
         // Couche pour l'image de fond
         Image(
-            painter = painterResource(id = R.drawable.sunny_day_wallpaper),
+            painter = painterResource(id = backgroundImage),
             contentDescription = null,
             contentScale = ContentScale.FillBounds,
-            modifier = Modifier
-                .fillMaxSize()
-                .blur(8.dp)
+            modifier = Modifier.fillMaxSize()
         )
         Box(
             modifier = Modifier
