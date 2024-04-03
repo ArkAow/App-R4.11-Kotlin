@@ -1,12 +1,25 @@
 package fr.unilim.weatherapplication.android
 
 import android.os.Bundle
+import androidx.activity.compose.setContent
+import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.ui.Modifier
 
 class FavoritesManagerActivity : AppCompatActivity() {
-    fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // Mettez en place l'interface utilisateur pour la gestion des favoris
-        // Permettez à l'utilisateur d'ajouter ou de supprimer des villes de la liste des favoris
-        // Une fois terminé, renvoyez la liste mise à jour à MainActivity
+        setContent {
+            MyApplicationTheme {
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
+                ) {
+
+                }
+            }
+        }
     }
 }

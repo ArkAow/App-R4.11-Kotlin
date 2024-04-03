@@ -45,5 +45,5 @@ dependencies {
     implementation(libs.compose.material3)
     implementation(libs.androidx.activity.compose)
     debugImplementation(libs.compose.ui.tooling)
-    implementation("io.coil-kt:coil-compose:1.3.2")
+    implementation("androidx.appcompat:appcompat:1.3.0")
 }

@@ -1,4 +1,4 @@
-package layout
+package view
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -32,9 +32,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.app.ActivityCompat
-import fr.unilim.weatherapplication.android.FavoritesManagerActivity
-import fr.unilim.weatherapplication.android.MANAGE_FAVORITES_REQUEST_CODE
 import fr.unilim.weatherapplication.android.MyApplicationTheme
 import fr.unilim.weatherapplication.android.R
 import model.City
