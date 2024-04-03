@@ -1,5 +1,7 @@
 package view
 
+import android.content.Context
+import android.content.Intent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -32,6 +34,10 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.core.content.ContextCompat.startActivity
+import fr.unilim.weatherapplication.android.FavoritesManagerActivity
+import fr.unilim.weatherapplication.android.MainActivity
 import fr.unilim.weatherapplication.android.MyApplicationTheme
 import fr.unilim.weatherapplication.android.R
 import model.City
@@ -40,7 +46,7 @@ import java.util.Calendar
 class WeatherAppHomePage {
 
     @Composable
-    fun WeatherApp() {
+    fun WeatherApp(contextProvided: Context) {
         // liste de villes
         val favoritesCities = listOf(
             City("Paris", "75", "Sunny", 25, 25, 21),
@@ -98,7 +104,8 @@ class WeatherAppHomePage {
                             // Bouton "Modifier les favoris"
                             Button(
                                 onClick = {
-
+                                    val modifyFavorite = Intent(contextProvided, FavoritesManagerActivity::class.java)
+                                    contextProvided.startActivity(modifyFavorite)
                                 },
                                 colors = ButtonDefaults.buttonColors(
                                     Color(0xFF7eb4b2)
@@ -256,14 +263,6 @@ class WeatherAppHomePage {
             "cloudy" -> R.drawable.cloudy_weather
             "stormy" -> R.drawable.stormy_weather
             else -> R.drawable.cloudy_weather
-        }
-    }
-
-    @Preview
-    @Composable
-    fun DefaultPreview() {
-        MyApplicationTheme {
-            WeatherApp()
         }
     }
 }

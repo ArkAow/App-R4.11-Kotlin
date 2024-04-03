@@ -11,6 +11,8 @@ import view.WeatherAppHomePage
 
 class MainActivity : ComponentActivity() {
 
+    val contextProvided = this.applicationContext
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -20,7 +22,7 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     val weatherAppHomePage = WeatherAppHomePage()
-                    weatherAppHomePage.WeatherApp()
+                    weatherAppHomePage.WeatherApp(contextProvided)
                 }
             }
         }
