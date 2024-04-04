@@ -1,9 +1,11 @@
 package fr.unilim.weatherapplication.android
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -38,11 +40,14 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.InternalCoroutinesApi
 import model.City
 import java.util.Calendar
 
 class MainActivity : ComponentActivity() {
 
+    @RequiresApi(Build.VERSION_CODES.O)
+    @InternalCoroutinesApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -63,7 +68,7 @@ fun WeatherApp() {
 
     // liste de villes
     val favoritesCities = listOf(
-        City("Paris", "75", "Sunny", 25, 25, 21),
+        City("", "75", "Sunny", 25, 25, 21),
         City("Limoges", "87", "rainy", 15, 25, 21),
         City("Poitiers", "86", "cloudy", 20, 25, 21),
         City("Fleuré", "86", "sunny", 28, 28, 21),
@@ -116,13 +121,18 @@ fun WeatherApp() {
                         // Section des favoris
                         FavoriteCitiesSection(favoritesCities)
 
-
                         val context = LocalContext.current
                         val intent = Intent(context, FavoritesManagerActivity::class.java)
 
                         // Bouton "Modifier les favoris" qui envoi vers une autre activité
                         Button(
                             onClick = {
+                                intent.putExtra("city1", favoritesCities[0].name)
+                                intent.putExtra("city2", favoritesCities[1].name)
+                                intent.putExtra("city3", favoritesCities[2].name)
+                                intent.putExtra("city4", favoritesCities[3].name)
+                                intent.putExtra("city5", favoritesCities[4].name)
+
                                 context.startActivity(intent)
                             },
                             colors = ButtonDefaults.buttonColors(
@@ -197,9 +207,10 @@ fun FavoriteCitiesSection(cities: List<City>) {
         )
         LazyRow {
             items(cities.size) { index ->
-                FavoriteCityItem(
-                    city = cities[index]
-                )
+                val city = cities[index]
+                if (city.name.isNotEmpty()) { // Vérifier si le nom de la ville n'est pas vide
+                    FavoriteCityItem(city = city)
+                }
             }
         }
     }
