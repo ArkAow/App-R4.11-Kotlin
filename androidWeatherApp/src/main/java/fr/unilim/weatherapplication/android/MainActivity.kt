@@ -1,13 +1,14 @@
 package fr.unilim.weatherapplication.android
 
+import Data.WeatherResponse
+import Data.WeatherViewModel
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -27,6 +28,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -38,11 +40,15 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import kotlinx.coroutines.InternalCoroutinesApi
 import model.City
 import java.util.Calendar
+import androidx.lifecycle.viewmodel.compose.viewModel
 
 class MainActivity : ComponentActivity() {
 
@@ -216,8 +222,9 @@ fun FavoriteCitiesSection(cities: List<City>) {
 }
 
 @Composable
-fun SearchCitySection() {
-    var searchText by remember { mutableStateOf("") }
+fun SearchCitySection(weatherViewModel: WeatherViewModel = viewModel()) {
+    val weatherResponse by weatherViewModel.weatherState.observeAsState()
+    var searchedName by remember { mutableStateOf("") }
 
     Column(
         modifier = Modifier
@@ -233,20 +240,21 @@ fun SearchCitySection() {
 
         )
         OutlinedTextField(
-            value = TextFieldValue(text = searchText),
-            onValueChange = { searchText = it.text },
+            value = searchedName,
+            onValueChange = { searchedName = it },
             label = {
                 Text(
                     text = "Saisissez le nom d'une ville",
                     color = Color.White
                 )
             },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            textStyle = TextStyle(color = Color.White)
         )
 
         Button(
             onClick = {
-
+                weatherViewModel.getWeatherForCity(searchedName)
             },
             colors = ButtonDefaults.buttonColors(
                 Color(0xFF7eb4b2)
@@ -262,6 +270,10 @@ fun SearchCitySection() {
             Text(
                 text = "Valider",
             )
+        }
+
+        weatherResponse?.let { weather ->
+            WeatherDisplay(weather = weather)
         }
     }
 }
@@ -311,5 +323,129 @@ fun getWeatherImageResourceId(weather: String): Int {
         "cloudy" -> R.drawable.cloudy_weather
         "stormy" -> R.drawable.stormy_weather
         else -> R.drawable.cloudy_weather
+    }
+}
+
+
+@Composable
+fun WeatherDisplay(weather: WeatherResponse) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+
+        Text(
+            text = "${weather.name}",
+            color = Color(0xFF58AAEB),
+            fontSize = 52.sp,
+            fontWeight = FontWeight.Bold,
+            fontFamily = androidx.compose.ui.text.font.FontFamily.Cursive
+        )
+
+        weather.weather.forEach { weatherDetail ->
+            val weatherText = when (weatherDetail.main) {
+                "Clouds" -> "Nuageux"
+                "Clear" -> "Ensoleillé"
+                "Rain" -> "Pluie"
+                else -> "Inconnu"
+            }
+
+            Text(
+                text = "${weather.main.temp}°C",
+                color = Color(0xFF58AAEB),
+                fontSize = 48.sp,
+                fontWeight = FontWeight.Bold,
+                fontFamily = androidx.compose.ui.text.font.FontFamily.Cursive
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+
+            var temp = weather.main.temp
+
+            if (temp <= 5) {
+                //mettre image cold
+
+            } else if (temp > 5 && temp <= 15) {
+                //mettre image normal_temp
+
+            } else if (temp > 15) {
+                //mettre image hot
+
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            weather.weather.forEach { weatherDetail ->
+
+                Text(
+                    text = "$weatherText",
+                    style = TextStyle(color = Color(0xFF58AAEB), fontSize = 26.sp),
+                    fontWeight = FontWeight.Bold,
+                    fontFamily = androidx.compose.ui.text.font.FontFamily.Monospace
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+
+                if (weatherDetail.main == "Clouds") {
+                    //mettre image clouds
+
+                } else if (weatherDetail.main == "Clear") {
+                    //mettre image clear
+
+                } else if (weatherDetail.main == "Rain") {
+                    //mettre image rain
+
+                } else if (weatherDetail.main == "Thunderstorm") {
+                    //mettre image storm
+                }
+
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Spacer(modifier = Modifier.height(50.dp))
+                    //mettre image cloudy
+                    Text(
+                        text = "${weather.wind.speed}m/s",
+                        color = Color(0xFF58AAEB),
+                        fontSize = 22.sp,
+                        fontWeight = FontWeight.Bold,
+                        fontFamily = androidx.compose.ui.text.font.FontFamily.Cursive
+                    )
+                    Spacer(modifier = Modifier.height(30.dp))
+                }
+
+                Spacer(modifier =Modifier.height(32.dp))
+
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Text(
+                        text = "Min : ${weather.main.temp_min}°C",
+                        color = Color(0xFF58AAEB),
+                        fontSize = 22.sp,
+                        fontWeight = FontWeight.Bold,
+                        fontFamily = androidx.compose.ui.text.font.FontFamily.Cursive
+                    )
+
+                    Text(
+                        text = "Max : ${weather.main.temp_max}°C",
+                        color = Color(0xFF58AAEB),
+                        fontSize = 22.sp,
+                        fontWeight = FontWeight.Bold,
+                        fontFamily = androidx.compose.ui.text.font.FontFamily.Cursive
+                    )
+
+                    Spacer(modifier =Modifier.height(16.dp))
+                }
+            }
+            Spacer(modifier =Modifier.height(85.dp))
+            Text(text = "Application développé par Baptiste Lafarge et Axel Pignol", color = Color.Black, fontSize = 12.sp)
+        }
     }
 }
