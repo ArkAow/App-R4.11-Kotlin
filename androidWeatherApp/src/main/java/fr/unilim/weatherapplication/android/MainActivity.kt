@@ -1,9 +1,7 @@
 package fr.unilim.weatherapplication.android
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
@@ -72,10 +70,6 @@ fun WeatherApp() {
         City("Nieuil", "16", "stormy", 22, 25, 21)
     )
 
-    val favoritesCitiesNames = listOf(
-        "Paris","Limoges","Poitiers","Fleuré","Nieuil",
-    )
-
     val currentHour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
     val backgroundImages = listOf(
         R.drawable.night_image,
@@ -122,7 +116,7 @@ fun WeatherApp() {
                         // Section des favoris
                         FavoriteCitiesSection(favoritesCities)
 
-                        // variables pour changer d'activité
+
                         val context = LocalContext.current
                         val intent = Intent(context, FavoritesManagerActivity::class.java)
 
