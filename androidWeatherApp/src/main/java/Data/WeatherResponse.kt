@@ -1,4 +1,4 @@
-package com.example.pignol_lafarge.android
+package Data
 
 data class WeatherResponse(
     val name: String,

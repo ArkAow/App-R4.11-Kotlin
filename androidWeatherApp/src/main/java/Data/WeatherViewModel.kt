@@ -1,4 +1,4 @@
-package com.example.pignol_lafarge.android
+package Data
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

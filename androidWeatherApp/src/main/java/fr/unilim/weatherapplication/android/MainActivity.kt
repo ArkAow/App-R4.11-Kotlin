@@ -46,7 +46,6 @@ import java.util.Calendar
 
 class MainActivity : ComponentActivity() {
 
-    @RequiresApi(Build.VERSION_CODES.O)
     @InternalCoroutinesApi
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

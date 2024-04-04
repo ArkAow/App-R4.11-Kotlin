@@ -1,4 +1,4 @@
-package com.example.pignol_lafarge.android
+package Data
 
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
