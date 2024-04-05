@@ -40,7 +40,9 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.InternalCoroutinesApi
 import java.util.Calendar
@@ -98,7 +100,10 @@ fun WeatherApp() {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(Color.Black.copy(alpha = 0.6f))
+                    .background(
+                        Color.Black.copy(alpha = 0.6f),
+                        shape = RoundedCornerShape(16.dp)
+                    )
                     .padding(16.dp)
             ) {
 
@@ -195,6 +200,7 @@ fun AppHeader() {
 
 @Composable
 fun FavoriteCitiesSection(cities: List<String>, weatherViewModel: WeatherViewModel = viewModel()) {
+
     Column(modifier = Modifier.fillMaxWidth()) {
         val weatherResponse by weatherViewModel.weatherState.observeAsState()
 
@@ -206,12 +212,12 @@ fun FavoriteCitiesSection(cities: List<String>, weatherViewModel: WeatherViewMod
         LazyRow {
             items(cities.size) { index ->
                 val city = cities[index]
-                if (city.isNotEmpty()) { // Vérifier si le nom de la ville n'est pas vide
+                if (city != "") { // Vérifier si le nom de la ville n'est pas vide
                     println("Le nom de la ville n'est pas vide")
-                    weatherResponse?.let { weather ->
+                    //weatherResponse?.let { weather ->
                         println("la réponse de l'api est ok")
-                        FavoriteCityItem(weather = weather)
-                    }
+                        FavoriteCityItem(/*weather = weather*/)
+                    //}
                 }
             }
         }
@@ -236,6 +242,7 @@ fun SearchCitySection(weatherViewModel: WeatherViewModel = viewModel()) {
                 .padding(horizontal = 8.dp)
 
         )
+
         OutlinedTextField(
             value = searchedName,
             onValueChange = { searchedName = it },
@@ -269,16 +276,16 @@ fun SearchCitySection(weatherViewModel: WeatherViewModel = viewModel()) {
             )
         }
 
-        weatherResponse?.let { weather ->
-            WeatherDisplay(weather = weather)
-        }
+        //weatherResponse?.let { weather ->
+            WeatherDisplay(/*weather = weather*/)
+        //}
     }
 }
 
 
 @Composable
-fun FavoriteCityItem(weather: WeatherResponse) {
-    val weatherImage: Painter = painterResource(id = getWeatherImageResourceId(weather.name))
+fun FavoriteCityItem(/*weather: WeatherResponse*/) {
+    val weatherImage: Painter = painterResource(id = getWeatherImageResourceId("Clouds"/*weather.name*/))
 
     Box(
         modifier = Modifier
@@ -298,16 +305,31 @@ fun FavoriteCityItem(weather: WeatherResponse) {
                 .size(120.dp, 200.dp)
                 .background(
                     Color.Black.copy(
-                        alpha = 0.4f),
+                        alpha = 0.4f
+                    ),
                     shape = RoundedCornerShape(16.dp)
                 ),
             contentAlignment = Alignment.TopCenter
         ) {
-            Text(
-                text = weather.name,
-                color = Color.White,
-                modifier = Modifier.padding(top = 16.dp)
-            )
+            Column {
+                // nom de la ville
+                Text(
+                    text = "Paris", //"/*${weather.name}°C*/",
+                    color = Color.White,
+                    modifier = Modifier.padding(16.dp)
+                )
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // temperature de la ville
+                Text(
+                    text = "21 °C", //"${weather.main.temp}°C",
+                    color = Color.White,
+                    fontSize = 32.sp,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(start = 8.dp)
+                )
+            }
         }
     }
 }
@@ -325,7 +347,7 @@ fun getWeatherImageResourceId(weather: String): Int {
 
 
 @Composable
-fun WeatherDisplay(weather: WeatherResponse) {
+fun WeatherDisplay(/*weather: WeatherResponse*/) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -441,8 +463,6 @@ fun WeatherDisplay(weather: WeatherResponse) {
                     Spacer(modifier =Modifier.height(16.dp))
                 }
             }
-            Spacer(modifier =Modifier.height(85.dp))
-            Text(text = "Application développé par Baptiste Lafarge et Axel Pignol", color = Color.Black, fontSize = 12.sp)
         }
         */
     }
