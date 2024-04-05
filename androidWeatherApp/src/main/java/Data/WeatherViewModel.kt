@@ -14,12 +14,7 @@ class WeatherViewModel(private val repository: WeatherRepository = WeatherReposi
     fun getWeatherForCity(cityName: String) {
         viewModelScope.launch {
             val response = repository.getWeather(cityName, "2d71de94af02dc9fb9cc8467f83779f7")
-            if (response.isSuccessful) {
-                _weatherState.postValue(response.body())
-            } else {
-                // Handle errors appropriately
-                _weatherState.postValue(null)
-            }
+            _weatherState.postValue(response)
         }
     }
 }

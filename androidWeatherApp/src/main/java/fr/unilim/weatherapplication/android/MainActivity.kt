@@ -212,12 +212,15 @@ fun FavoriteCitiesSection(cities: List<String>, weatherViewModel: WeatherViewMod
         LazyRow {
             items(cities.size) { index ->
                 val city = cities[index]
-                if (city != "") { // Vérifier si le nom de la ville n'est pas vide
+                if (city.isNotBlank()) {
                     println("Le nom de la ville n'est pas vide")
-                    //weatherResponse?.let { weather ->
-                        println("la réponse de l'api est ok")
-                        FavoriteCityItem(/*weather = weather*/)
-                    //}
+                    weatherResponse?.let { weather ->
+                        println("La réponse de l'API est OK")
+                        FavoriteCityItem(weather = weather)
+                    } ?: Text(
+                        "Erreur lors de \nla récupération \ndes données",
+                        color = Color.LightGray,
+                        modifier = Modifier.padding(start = 16.dp))
                 }
             }
         }
@@ -276,16 +279,16 @@ fun SearchCitySection(weatherViewModel: WeatherViewModel = viewModel()) {
             )
         }
 
-        //weatherResponse?.let { weather ->
+        weatherResponse?.let { weather ->
             WeatherDisplay(/*weather = weather*/)
-        //}
+        }
     }
 }
 
 
 @Composable
-fun FavoriteCityItem(/*weather: WeatherResponse*/) {
-    val weatherImage: Painter = painterResource(id = getWeatherImageResourceId("Clouds"/*weather.name*/))
+fun FavoriteCityItem(weather: WeatherResponse) {
+    val weatherImage: Painter = painterResource(id = getWeatherImageResourceId(weather.weather[0].main))
 
     Box(
         modifier = Modifier
@@ -314,7 +317,7 @@ fun FavoriteCityItem(/*weather: WeatherResponse*/) {
             Column {
                 // nom de la ville
                 Text(
-                    text = "Paris", //"/*${weather.name}°C*/",
+                    text = "${weather.name}°C",
                     color = Color.White,
                     modifier = Modifier.padding(16.dp)
                 )
@@ -323,7 +326,7 @@ fun FavoriteCityItem(/*weather: WeatherResponse*/) {
 
                 // temperature de la ville
                 Text(
-                    text = "21 °C", //"${weather.main.temp}°C",
+                    text = "${weather.main.temp}°C",
                     color = Color.White,
                     fontSize = 32.sp,
                     fontWeight = FontWeight.Bold,
