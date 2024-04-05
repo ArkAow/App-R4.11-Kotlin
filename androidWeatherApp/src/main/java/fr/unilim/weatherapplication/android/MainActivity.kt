@@ -8,7 +8,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -41,14 +40,10 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import kotlinx.coroutines.InternalCoroutinesApi
-import model.City
-import java.util.Calendar
 import androidx.lifecycle.viewmodel.compose.viewModel
+import kotlinx.coroutines.InternalCoroutinesApi
+import java.util.Calendar
 
 class MainActivity : ComponentActivity() {
 
@@ -73,11 +68,7 @@ fun WeatherApp() {
 
     // liste de villes
     val favoritesCities = listOf(
-        City("", "75", "Sunny", 25, 25, 21),
-        City("Limoges", "87", "rainy", 15, 25, 21),
-        City("Poitiers", "86", "cloudy", 20, 25, 21),
-        City("Fleuré", "86", "sunny", 28, 28, 21),
-        City("Nieuil", "16", "stormy", 22, 25, 21)
+        "Bordeaux", "Limoges", "Poitiers", "Fleuré", "Paris"
     )
 
     val currentHour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
@@ -132,11 +123,11 @@ fun WeatherApp() {
                         // Bouton "Modifier les favoris" qui envoi vers une autre activité
                         Button(
                             onClick = {
-                                intent.putExtra("city1", favoritesCities[0].name)
-                                intent.putExtra("city2", favoritesCities[1].name)
-                                intent.putExtra("city3", favoritesCities[2].name)
-                                intent.putExtra("city4", favoritesCities[3].name)
-                                intent.putExtra("city5", favoritesCities[4].name)
+                                intent.putExtra("city1", favoritesCities[0])
+                                intent.putExtra("city2", favoritesCities[1])
+                                intent.putExtra("city3", favoritesCities[2])
+                                intent.putExtra("city4", favoritesCities[3])
+                                intent.putExtra("city5", favoritesCities[4])
 
                                 context.startActivity(intent)
                             },
@@ -203,8 +194,10 @@ fun AppHeader() {
 }
 
 @Composable
-fun FavoriteCitiesSection(cities: List<City>) {
+fun FavoriteCitiesSection(cities: List<String>, weatherViewModel: WeatherViewModel = viewModel()) {
     Column(modifier = Modifier.fillMaxWidth()) {
+        val weatherResponse by weatherViewModel.weatherState.observeAsState()
+
         Text(
             text = "Favoris",
             color = Color.White,
@@ -213,8 +206,12 @@ fun FavoriteCitiesSection(cities: List<City>) {
         LazyRow {
             items(cities.size) { index ->
                 val city = cities[index]
-                if (city.name.isNotEmpty()) { // Vérifier si le nom de la ville n'est pas vide
-                    FavoriteCityItem(city = city)
+                if (city.isNotEmpty()) { // Vérifier si le nom de la ville n'est pas vide
+                    println("Le nom de la ville n'est pas vide")
+                    weatherResponse?.let { weather ->
+                        println("la réponse de l'api est ok")
+                        FavoriteCityItem(weather = weather)
+                    }
                 }
             }
         }
@@ -232,7 +229,7 @@ fun SearchCitySection(weatherViewModel: WeatherViewModel = viewModel()) {
             .padding(horizontal = 16.dp)
     ) {
         Text(
-            text = "Rechercher",
+            text = "Recherche",
             color = Color.White,
             modifier = Modifier
                 .padding(vertical = 16.dp)
@@ -280,8 +277,8 @@ fun SearchCitySection(weatherViewModel: WeatherViewModel = viewModel()) {
 
 
 @Composable
-fun FavoriteCityItem(city: City) {
-    val weatherImage: Painter = painterResource(id = getWeatherImageResourceId(city.meteo))
+fun FavoriteCityItem(weather: WeatherResponse) {
+    val weatherImage: Painter = painterResource(id = getWeatherImageResourceId(weather.name))
 
     Box(
         modifier = Modifier
@@ -307,7 +304,7 @@ fun FavoriteCityItem(city: City) {
             contentAlignment = Alignment.TopCenter
         ) {
             Text(
-                text = city.name,
+                text = weather.name,
                 color = Color.White,
                 modifier = Modifier.padding(top = 16.dp)
             )
@@ -318,10 +315,10 @@ fun FavoriteCityItem(city: City) {
 @Composable
 fun getWeatherImageResourceId(weather: String): Int {
     return when (weather.lowercase()) {
-        "sunny" -> R.drawable.sunny_weather
-        "rainy" -> R.drawable.rainy_weather
-        "cloudy" -> R.drawable.cloudy_weather
-        "stormy" -> R.drawable.stormy_weather
+        "Clear" -> R.drawable.sunny_weather
+        "Rain" -> R.drawable.rainy_weather
+        "Clouds" -> R.drawable.cloudy_weather
+        "Thunderstorm" -> R.drawable.stormy_weather
         else -> R.drawable.cloudy_weather
     }
 }
@@ -335,7 +332,7 @@ fun WeatherDisplay(weather: WeatherResponse) {
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-
+        /*
         Text(
             text = "${weather.name}",
             color = Color(0xFF58AAEB),
@@ -447,5 +444,6 @@ fun WeatherDisplay(weather: WeatherResponse) {
             Spacer(modifier =Modifier.height(85.dp))
             Text(text = "Application développé par Baptiste Lafarge et Axel Pignol", color = Color.Black, fontSize = 12.sp)
         }
+        */
     }
 }
