@@ -1,7 +1,5 @@
 package Data
 
-import retrofit2.Response
-
 class WeatherRepository {
 
     private val retrofitService = RetrofitInstance.api

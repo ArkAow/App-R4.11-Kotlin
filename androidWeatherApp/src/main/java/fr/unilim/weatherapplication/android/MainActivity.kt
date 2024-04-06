@@ -2,6 +2,7 @@ package fr.unilim.weatherapplication.android
 
 import Data.WeatherResponse
 import Data.WeatherViewModel
+import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -51,6 +52,7 @@ class MainActivity : ComponentActivity() {
 
     @InternalCoroutinesApi
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
         setContent {
             MyApplicationTheme {
@@ -64,6 +66,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
+
 
 @Composable
 fun WeatherApp() {
@@ -231,6 +234,7 @@ fun FavoriteCitiesSection(cities: List<String>, weatherViewModel: WeatherViewMod
 fun SearchCitySection(weatherViewModel: WeatherViewModel = viewModel()) {
     val weatherResponse by weatherViewModel.weatherState.observeAsState()
     var searchedName by remember { mutableStateOf("") }
+    var showDialog by remember { mutableStateOf(false) } // Etat pour contrôler la visibilité du dialogue
 
     Column(
         modifier = Modifier
@@ -262,6 +266,7 @@ fun SearchCitySection(weatherViewModel: WeatherViewModel = viewModel()) {
         Button(
             onClick = {
                 weatherViewModel.getWeatherForCity(searchedName)
+                showDialog = true // Mettre à vrai pour afficher le dialogue
             },
             colors = ButtonDefaults.buttonColors(
                 Color(0xFF7eb4b2)
@@ -279,8 +284,16 @@ fun SearchCitySection(weatherViewModel: WeatherViewModel = viewModel()) {
             )
         }
 
-        weatherResponse?.let { weather ->
-            WeatherDisplay(/*weather = weather*/)
+        // Afficher le dialogue conditionnellement
+        if (showDialog) {
+            weatherResponse?.let { weather ->
+                ShowWeather(weatherResponse = weather)
+                showDialog = false
+
+            } ?: run {
+                ShowWeather(weatherResponse = null)
+                showDialog = false
+            }
         }
     }
 }
@@ -350,123 +363,26 @@ fun getWeatherImageResourceId(weather: String): Int {
 
 
 @Composable
-fun WeatherDisplay(/*weather: WeatherResponse*/) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        /*
-        Text(
-            text = "${weather.name}",
-            color = Color(0xFF58AAEB),
-            fontSize = 52.sp,
-            fontWeight = FontWeight.Bold,
-            fontFamily = androidx.compose.ui.text.font.FontFamily.Cursive
-        )
+fun ShowWeather(weatherResponse: WeatherResponse?) {
+    val builder = AlertDialog.Builder(LocalContext.current)
+    builder.setTitle("Résultat de la recherche")
 
-        weather.weather.forEach { weatherDetail ->
-            val weatherText = when (weatherDetail.main) {
-                "Clouds" -> "Nuageux"
-                "Clear" -> "Ensoleillé"
-                "Rain" -> "Pluie"
-                else -> "Inconnu"
-            }
+    // Si les données météorologiques sont disponibles, affichez-les dans le dialogue
+    val message = "Nom de la ville : ${weatherResponse?.name}\n" +
+            "Type de temps : ${weatherResponse?.weather?.getOrNull(0)?.main}\n" +
+            "Température : ${weatherResponse?.main?.temp}°C\n" +
+            "Température minimale : ${weatherResponse?.main?.temp_min}°C\n" +
+            "Température maximale : ${weatherResponse?.main?.temp_max}°C\n" +
+            "Vitesse du vent : ${weatherResponse?.wind?.speed} m/s\n"
 
-            Text(
-                text = "${weather.main.temp}°C",
-                color = Color(0xFF58AAEB),
-                fontSize = 48.sp,
-                fontWeight = FontWeight.Bold,
-                fontFamily = androidx.compose.ui.text.font.FontFamily.Cursive
-            )
-            Spacer(modifier = Modifier.height(16.dp))
+    // Ajoutez d'autres informations météorologiques selon vos besoins
+    builder.setMessage(message)
 
-            var temp = weather.main.temp
-
-            if (temp <= 5) {
-                //mettre image cold
-
-            } else if (temp > 5 && temp <= 15) {
-                //mettre image normal_temp
-
-            } else if (temp > 15) {
-                //mettre image hot
-
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            weather.weather.forEach { weatherDetail ->
-
-                Text(
-                    text = "$weatherText",
-                    style = TextStyle(color = Color(0xFF58AAEB), fontSize = 26.sp),
-                    fontWeight = FontWeight.Bold,
-                    fontFamily = androidx.compose.ui.text.font.FontFamily.Monospace
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-
-                if (weatherDetail.main == "Clouds") {
-                    //mettre image clouds
-
-                } else if (weatherDetail.main == "Clear") {
-                    //mettre image clear
-
-                } else if (weatherDetail.main == "Rain") {
-                    //mettre image rain
-
-                } else if (weatherDetail.main == "Thunderstorm") {
-                    //mettre image storm
-                }
-
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Spacer(modifier = Modifier.height(50.dp))
-                    //mettre image cloudy
-                    Text(
-                        text = "${weather.wind.speed}m/s",
-                        color = Color(0xFF58AAEB),
-                        fontSize = 22.sp,
-                        fontWeight = FontWeight.Bold,
-                        fontFamily = androidx.compose.ui.text.font.FontFamily.Cursive
-                    )
-                    Spacer(modifier = Modifier.height(30.dp))
-                }
-
-                Spacer(modifier =Modifier.height(32.dp))
-
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    Text(
-                        text = "Min : ${weather.main.temp_min}°C",
-                        color = Color(0xFF58AAEB),
-                        fontSize = 22.sp,
-                        fontWeight = FontWeight.Bold,
-                        fontFamily = androidx.compose.ui.text.font.FontFamily.Cursive
-                    )
-
-                    Text(
-                        text = "Max : ${weather.main.temp_max}°C",
-                        color = Color(0xFF58AAEB),
-                        fontSize = 22.sp,
-                        fontWeight = FontWeight.Bold,
-                        fontFamily = androidx.compose.ui.text.font.FontFamily.Cursive
-                    )
-
-                    Spacer(modifier =Modifier.height(16.dp))
-                }
-            }
-        }
-        */
+    // Ajoutez un bouton "OK" pour fermer le dialogue
+    builder.setPositiveButton("OK") { dialog, _ ->
+        dialog.dismiss()
     }
+
+    // Affichez le dialogue
+    builder.show()
 }
